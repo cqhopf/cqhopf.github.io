@@ -673,6 +673,54 @@
             margin-top: 1rem;
             display: none;
         }
+        
+        /* 文件预览 */
+        .file-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
+        .preview-item {
+            position: relative;
+            width: 100px;
+            height: 120px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+        }
+        
+        .preview-item .file-name {
+            padding: 5px;
+            font-size: 0.7rem;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -707,6 +755,44 @@
             <!-- 资料卡片将通过JavaScript动态生成 -->
         </div>
 
+        <!-- 账户管理部分 -->
+        <div class="account-section">
+            <div class="account-header">
+                <h2><i class="fas fa-wallet"></i> 账户余额管理</h2>
+                <div class="balance-display">
+                    <span>余额：</span>¥<span id="balanceAmount">0.00</span>
+                </div>
+            </div>
+            
+            <h3>选择充值金额：</h3>
+            <div class="recharge-options">
+                <div class="recharge-option" data-amount="10">
+                    <div class="recharge-amount">¥10.00</div>
+                </div>
+                <div class="recharge-option" data-amount="30">
+                    <div class="recharge-amount">¥30.00</div>
+                    <div class="recharge-bonus">赠¥3.00</div>
+                </div>
+                <div class="recharge-option selected" data-amount="50">
+                    <div class="recharge-amount">¥50.00</div>
+                    <div class="recharge-bonus">赠¥8.00</div>
+                </div>
+                <div class="recharge-option" data-amount="100">
+                    <div class="recharge-amount">¥100.00</div>
+                    <div class="recharge-bonus">赠¥20.00</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="customAmount">自定义金额：</label>
+                <input type="number" id="customAmount" class="form-control" placeholder="输入充值金额">
+            </div>
+            
+            <button class="btn btn-primary" style="width:100%" id="rechargeBtn">
+                <i class="fas fa-credit-card"></i> 立即充值
+            </button>
+        </div>
+
         <!-- 管理员面板 -->
         <div class="admin-panel" id="admin">
             <div class="admin-header">
@@ -728,10 +814,14 @@
                 <div class="upload-area" id="dropArea">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <h3>拖放文件到此处上传</h3>
-                    <p>支持PDF和图片格式 (JPG, PNG)</p>
+                    <p>支持PDF和图片格式 (JPG, PNG, PDF)</p>
                     <p>或</p>
                     <button class="btn btn-primary" id="browseBtn">选择文件</button>
                     <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none">
+                </div>
+                
+                <div class="file-preview" id="filePreview">
+                    <!-- 文件预览将在这里显示 -->
                 </div>
                 
                 <div class="upload-success" id="uploadSuccess">
@@ -831,7 +921,7 @@
                     </div>
                 </div>
                 
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" id="saveSettingsBtn">
                     <i class="fas fa-save"></i> 保存设置
                 </button>
             </div>
@@ -860,9 +950,9 @@
     </footer>
 
     <script>
-        // 模拟数据
-        let userBalance = 50.00;
-        let resources = [
+        // 模拟数据 - 使用localStorage持久化存储
+        let userBalance = parseFloat(localStorage.getItem('userBalance')) || 50.00;
+        let resources = JSON.parse(localStorage.getItem('resources')) || [
             {
                 id: 1,
                 title: "函数与导数专题突破",
@@ -871,7 +961,8 @@
                 price: 0,
                 pages: 42,
                 thumbnail: "chart-bar",
-                accessDuration: 0
+                accessDuration: 0,
+                filePath: "fufeiziliao/resources/function.pdf"
             },
             {
                 id: 2,
@@ -881,7 +972,8 @@
                 price: 12.8,
                 pages: 36,
                 thumbnail: "shapes",
-                accessDuration: 72
+                accessDuration: 72,
+                filePath: "fufeiziliao/resources/geometry.pdf"
             },
             {
                 id: 3,
@@ -891,7 +983,8 @@
                 price: 9.9,
                 pages: 28,
                 thumbnail: "infinity",
-                accessDuration: 72
+                accessDuration: 72,
+                filePath: "fufeiziliao/resources/sequence.pdf"
             },
             {
                 id: 4,
@@ -901,9 +994,16 @@
                 price: 0,
                 pages: 31,
                 thumbnail: "project-diagram",
-                accessDuration: 0
+                accessDuration: 0,
+                filePath: "fufeiziliao/resources/analytic_geometry.pdf"
             }
         ];
+
+        // 保存数据到localStorage
+        function saveData() {
+            localStorage.setItem('userBalance', userBalance);
+            localStorage.setItem('resources', JSON.stringify(resources));
+        }
 
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
@@ -944,6 +1044,7 @@
             const dropArea = document.getElementById('dropArea');
             const fileInput = document.getElementById('fileInput');
             const browseBtn = document.getElementById('browseBtn');
+            const filePreview = document.getElementById('filePreview');
             
             browseBtn.addEventListener('click', function() {
                 fileInput.click();
@@ -970,7 +1071,7 @@
             });
             
             function highlight() {
-                dropArea.style.borderColor = var(--accent);
+                dropArea.style.borderColor = '#4361ee';
                 dropArea.style.backgroundColor = '#f0f5ff';
             }
             
@@ -993,14 +1094,45 @@
             }
             
             function handleFiles(files) {
+                filePreview.innerHTML = '';
                 if (files.length > 0) {
-                    // 这里模拟文件上传
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const fileName = file.name;
+                        const fileType = file.type.split('/')[0];
+                        
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        
+                        if (fileType === 'image') {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                previewItem.innerHTML = `
+                                    <img src="${e.target.result}" alt="${fileName}">
+                                    <div class="file-name">${fileName}</div>
+                                    <button class="remove-btn">&times;</button>
+                                `;
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            previewItem.innerHTML = `
+                                <div style="height:80px; display:flex; align-items:center; justify-content:center;">
+                                    <i class="fas fa-file-pdf" style="font-size:2rem; color:#e74c3c;"></i>
+                                </div>
+                                <div class="file-name">${fileName}</div>
+                                <button class="remove-btn">&times;</button>
+                            `;
+                        }
+                        
+                        const removeBtn = previewItem.querySelector('.remove-btn');
+                        removeBtn.addEventListener('click', function() {
+                            previewItem.remove();
+                        });
+                        
+                        filePreview.appendChild(previewItem);
+                    }
+                    
                     document.getElementById('uploadSuccess').style.display = 'block';
-                    dropArea.innerHTML = `
-                        <i class="fas fa-check-circle" style="color:#28a745;"></i>
-                        <h3>已选择 ${files.length} 个文件</h3>
-                        <p>${Array.from(files).map(f => f.name).join(', ')}</p>
-                    `;
                 }
             }
             
@@ -1022,19 +1154,32 @@
                     return;
                 }
                 
+                // 获取文件名（模拟上传）
+                let filePath = '';
+                const previewItems = document.querySelectorAll('.preview-item');
+                if (previewItems.length > 0) {
+                    const fileName = previewItems[0].querySelector('.file-name').textContent;
+                    filePath = `fufeiziliao/resources/${fileName}`;
+                } else {
+                    alert('请上传文件');
+                    return;
+                }
+                
                 // 创建新资料
                 const newResource = {
-                    id: resources.length + 1,
+                    id: resources.length > 0 ? Math.max(...resources.map(r => r.id)) + 1 : 1,
                     title: title,
                     description: desc,
                     type: type,
                     price: price,
                     pages: Math.floor(Math.random() * 30) + 20, // 随机页数
                     thumbnail: getRandomThumbnail(),
-                    accessDuration: duration
+                    accessDuration: duration,
+                    filePath: filePath
                 };
                 
                 resources.push(newResource);
+                saveData();
                 
                 // 更新界面
                 renderResourceCards();
@@ -1046,16 +1191,7 @@
                 document.querySelector('input[name="resourceType"][value="free"]').checked = true;
                 document.getElementById('priceSection').style.display = 'none';
                 document.getElementById('uploadSuccess').style.display = 'none';
-                dropArea.innerHTML = `
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <h3>拖放文件到此处上传</h3>
-                    <p>支持PDF和图片格式 (JPG, PNG)</p>
-                    <p>或</p>
-                    <button class="btn btn-primary" id="browseBtn">选择文件</button>
-                `;
-                document.getElementById('browseBtn').addEventListener('click', function() {
-                    fileInput.click();
-                });
+                document.getElementById('filePreview').innerHTML = '';
                 
                 alert('资料添加成功！');
             });
@@ -1063,6 +1199,45 @@
             // 资料搜索
             document.getElementById('searchResources').addEventListener('input', function() {
                 renderResourceList(this.value);
+            });
+            
+            // 充值处理
+            document.getElementById('rechargeBtn').addEventListener('click', function() {
+                const customAmount = parseFloat(document.getElementById('customAmount').value);
+                const selectedOption = document.querySelector('.recharge-option.selected');
+                const amount = selectedOption ? parseFloat(selectedOption.getAttribute('data-amount')) : 0;
+                
+                let rechargeAmount = 0;
+                
+                if (customAmount && customAmount > 0) {
+                    rechargeAmount = customAmount;
+                } else if (amount > 0) {
+                    rechargeAmount = amount;
+                } else {
+                    alert('请选择或输入充值金额');
+                    return;
+                }
+                
+                userBalance += rechargeAmount;
+                document.getElementById('balanceAmount').textContent = userBalance.toFixed(2);
+                saveData();
+                
+                alert(`成功充值 ¥${rechargeAmount.toFixed(2)}！当前余额：¥${userBalance.toFixed(2)}`);
+            });
+            
+            // 充值选项选择
+            const rechargeOptions = document.querySelectorAll('.recharge-option');
+            rechargeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    rechargeOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    document.getElementById('customAmount').value = '';
+                });
+            });
+            
+            // 保存设置
+            document.getElementById('saveSettingsBtn').addEventListener('click', function() {
+                alert('设置已保存！');
             });
         });
         
@@ -1096,8 +1271,12 @@
                         }
                         <div class="card-actions">
                             ${resource.type === 'free' ? 
-                                `<button class="btn btn-primary" style="flex:1"><i class="fas fa-book-open"></i> 免费阅读</button>` :
-                                `<button class="btn btn-warning" style="flex:1"><i class="fas fa-lock-open"></i> 购买阅读</button>`
+                                `<button class="btn btn-primary" style="flex:1" onclick="openResource(${resource.id})">
+                                    <i class="fas fa-book-open"></i> 免费阅读
+                                </button>` :
+                                `<button class="btn btn-warning" style="flex:1" onclick="purchaseResource(${resource.id})">
+                                    <i class="fas fa-lock-open"></i> 购买阅读
+                                </button>`
                             }
                         </div>
                     </div>
@@ -1142,7 +1321,8 @@
                             <button class="btn btn-outline" style="border-color:#ccc; color:#333;">
                                 <i class="fas fa-edit"></i> 编辑
                             </button>
-                            <button class="btn btn-outline" style="border-color:#ccc; color:#333; margin-left:0.5rem;">
+                            <button class="btn btn-outline" style="border-color:#ccc; color:#333; margin-left:0.5rem;"
+                                onclick="deleteResource(${resource.id})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -1157,6 +1337,70 @@
             const icons = ['chart-bar', 'shapes', 'infinity', 'project-diagram', 
                            'chart-line', 'cube', 'draw-polygon', 'function'];
             return icons[Math.floor(Math.random() * icons.length)];
+        }
+        
+        // 购买资料
+        function purchaseResource(id) {
+            const resource = resources.find(r => r.id === id);
+            if (!resource) return;
+            
+            if (userBalance < resource.price) {
+                alert('您的余额不足，请先充值！');
+                return;
+            }
+            
+            if (confirm(`确定花费 ¥${resource.price.toFixed(2)} 购买 "${resource.title}"？购买后 ${resource.accessDuration} 小时内可无限次阅读。`)) {
+                userBalance -= resource.price;
+                document.getElementById('balanceAmount').textContent = userBalance.toFixed(2);
+                saveData();
+                
+                // 记录购买时间
+                const purchase = {
+                    resourceId: id,
+                    purchaseTime: new Date(),
+                    expires: new Date(new Date().getTime() + resource.accessDuration * 60 * 60 * 1000)
+                };
+                
+                // 保存购买记录
+                let purchases = JSON.parse(localStorage.getItem('purchases')) || [];
+                purchases.push(purchase);
+                localStorage.setItem('purchases', JSON.stringify(purchases));
+                
+                // 打开资源
+                openResource(id);
+            }
+        }
+        
+        // 打开资源
+        function openResource(id) {
+            const resource = resources.find(r => r.id === id);
+            if (!resource) return;
+            
+            // 检查是否已购买且在有效期内
+            if (resource.type === 'paid') {
+                const purchases = JSON.parse(localStorage.getItem('purchases')) || [];
+                const purchase = purchases.find(p => p.resourceId === id && new Date(p.expires) > new Date());
+                
+                if (!purchase) {
+                    alert('您尚未购买此资料或阅读权限已过期！');
+                    return;
+                }
+            }
+            
+            // 在实际应用中，这里会打开PDF或图片
+            // 由于GitHub Pages的限制，我们模拟打开文件
+            window.open(resource.filePath, '_blank');
+        }
+        
+        // 删除资料
+        function deleteResource(id) {
+            if (confirm('确定要删除此资料吗？此操作不可恢复。')) {
+                resources = resources.filter(r => r.id !== id);
+                saveData();
+                renderResourceCards();
+                renderResourceList();
+                alert('资料已删除！');
+            }
         }
     </script>
 </body>
