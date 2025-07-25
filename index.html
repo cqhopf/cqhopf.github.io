@@ -1,211 +1,688 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>学科导航</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#3b82f6',
-            secondary: '#10b981',
-            neutral: '#f3f4f6',
-          },
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-          },
-        },
-      }
-    }
-  </script>
-  
-  <style type="text/tailwindcss">
-    @layer utilities {
-      .content-auto {
-        content-visibility: auto;
-      }
-      .subject-card {
-        @apply relative overflow-hidden rounded-xl transition-all duration-300 transform hover:scale-[1.03] hover:shadow-xl;
-      }
-      .subject-card-overlay {
-        @apply absolute inset-0 bg-gradient-to-t from-black/70 to-transparent;
-      }
-      .subject-card-title {
-        @apply absolute bottom-4 left-4 text-white font-bold text-xl md:text-2xl;
-      }
-    }
-  </style>
-</head>
-<body class="bg-gray-50">
-  <!-- 导航栏 -->
-  <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50 transition-all duration-300" id="navbar">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <!-- Logo区域 -->
-      <a href="#" class="flex items-center space-x-3">
-        <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
-          <i class="fa fa-graduation-cap text-white text-2xl"></i>
-        </div>
-        <span class="text-xl font-bold text-gray-800" id="site-title">学科导航</span>
-      </a>
-      
-      <!-- 桌面导航菜单 -->
-      <nav class="hidden md:flex items-center space-x-8">
-        <a href="#" class="text-primary font-medium hover:text-primary/80 transition-colors">数学</a>
-        <a href="#" class="text-gray-600 font-medium hover:text-primary transition-colors">物理</a>
-        <a href="#" class="text-gray-600 font-medium hover:text-primary transition-colors">化学</a>
-        <a href="#" class="text-gray-600 font-medium hover:text-primary transition-colors">生物</a>
-        <a href="#" class="text-gray-600 font-medium hover:text-primary transition-colors">语文</a>
-        <a href="#" class="text-gray-600 font-medium hover:text-primary transition-colors">英语</a>
-        <a href="#" class="text-gray-600 font-medium hover:text-primary transition-colors">付费阅读</a>
-      </nav>
-      
-      <!-- 移动端菜单按钮 -->
-      <button class="md:hidden text-gray-600 focus:outline-none" id="menu-toggle">
-        <i class="fa fa-bars text-2xl"></i>
-      </button>
-    </div>
-    
-    <!-- 移动端导航菜单 -->
-    <div class="md:hidden hidden bg-white" id="mobile-menu">
-      <div class="px-4 py-3 space-y-3">
-        <a href="#" class="block py-2 text-primary font-medium">数学</a>
-        <a href="#" class="block py-2 text-gray-600 font-medium">物理</a>
-        <a href="#" class="block py-2 text-gray-600 font-medium">化学</a>
-        <a href="#" class="block py-2 text-gray-600 font-medium">生物</a>
-        <a href="#" class="block py-2 text-gray-600 font-medium">语文</a>
-        <a href="#" class="block py-2 text-gray-600 font-medium">英语</a>
-        <a href="#" class="block py-2 text-gray-600 font-medium">付费阅读</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- 主内容区 -->
-  <main class="container mx-auto px-4 pt-24 pb-16">
-    <h1 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-center text-gray-800 mb-10">学科资源</h1>
-    
-    <!-- 学科卡片网格 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- 数学卡片 -->
-      <a href="#" class="subject-card group">
-        <img src="https://picsum.photos/seed/math/600/400" alt="数学学科图片" class="w-full h-64 object-cover">
-        <div class="subject-card-overlay"></div>
-        <h2 class="subject-card-title">数学</h2>
-      </a>
-      
-      <!-- 物理卡片 -->
-      <a href="#" class="subject-card group">
-        <img src="https://picsum.photos/seed/physics/600/400" alt="物理学科图片" class="w-full h-64 object-cover">
-        <div class="subject-card-overlay"></div>
-        <h2 class="subject-card-title">物理</h2>
-      </a>
-      
-      <!-- 化学卡片 -->
-      <a href="#" class="subject-card group">
-        <img src="https://picsum.photos/seed/chemistry/600/400" alt="化学学科图片" class="w-full h-64 object-cover">
-        <div class="subject-card-overlay"></div>
-        <h2 class="subject-card-title">化学</h2>
-      </a>
-      
-      <!-- 生物卡片 -->
-      <a href="#" class="subject-card group">
-        <img src="https://picsum.photos/seed/biology/600/400" alt="生物学科图片" class="w-full h-64 object-cover">
-        <div class="subject-card-overlay"></div>
-        <h2 class="subject-card-title">生物</h2>
-      </a>
-      
-      <!-- 语文卡片 -->
-      <a href="#" class="subject-card group">
-        <img src="https://picsum.photos/seed/chinese/600/400" alt="语文学科图片" class="w-full h-64 object-cover">
-        <div class="subject-card-overlay"></div>
-        <h2 class="subject-card-title">语文</h2>
-      </a>
-      
-      <!-- 英语卡片 -->
-      <a href="#" class="subject-card group">
-        <img src="https://picsum.photos/seed/english/600/400" alt="英语学科图片" class="w-full h-64 object-cover">
-        <div class="subject-card-overlay"></div>
-        <h2 class="subject-card-title">英语</h2>
-      </a>
-       <!-- 付费阅读卡片 -->
-      <a href="#" class="subject-card group">
-        <img src="https://picsum.photos/seed/english/600/400" alt="付费阅读图片" class="w-full h-64 object-cover">
-        <div class="subject-card-overlay"></div>
-        <h2 class="subject-card-title">付费阅读</h2>
-      </a>
-    </div>
-  </main>
-
-  <!-- 页脚 -->
-  <footer class="bg-gray-800 text-white py-10">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="mb-6 md:mb-0">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-              <i class="fa fa-graduation-cap text-white"></i>
-            </div>
-            <span class="text-lg font-bold" id="footer-title">学科导航</span>
-          </div>
-          <p class="text-gray-400 mt-2">探索知识的海洋</p>
-        </div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学海无涯 - 教育学科门户</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
         
-        <div class="flex space-x-6">
-          <a href="#" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fa fa-weibo text-xl"></i>
-          </a>
-          <a href="#" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fa fa-wechat text-xl"></i>
-          </a>
-          <a href="#" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fa fa-github text-xl"></i>
-          </a>
+        :root {
+            --primary: #1a2980;
+            --secondary: #26d0ce;
+            --accent: #ffd700;
+            --text-dark: #333;
+            --text-light: #f8f9fa;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 导航栏样式 - 响应式设计 */
+        header {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            padding: 5px 0;
+        }
+        
+        .logo i {
+            font-size: 2.2rem;
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .logo-text span {
+            color: var(--accent);
+        }
+        
+        /* 移动端菜单按钮 */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 10px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            transition: var(--transition);
+        }
+        
+        .nav-item {
+            margin: 0 8px;
+        }
+        
+        /* 修复导航链接样式问题 */
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 30px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* 确保图标颜色不改变 */
+        .nav-link i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            transition: var(--transition);
+        }
+        
+        .nav-link:hover i {
+            color: white;
+        }
+        
+        /* 主体内容区域样式 */
+        main {
+            padding: 40px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        /* 图片网格布局 - 响应式设计 */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+        
+        .image-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            height: 400px;
+            background: white;
+        }
+        
+        .image-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+        
+        .image-card a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            color: inherit; /* 确保链接不改变文本颜色 */
+        }
+        
+        .image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .image-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            padding: 30px 20px 20px;
+            color: white;
+            transform: translateY(10px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .image-card:hover .image-overlay {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .image-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+        
+        .image-desc {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        /* 学科颜色标识 */
+        .math-card .image-overlay { background: linear-gradient(to top, rgba(41, 128, 185, 0.85), transparent); }
+        .physics-card .image-overlay { background: linear-gradient(to top, rgba(155, 89, 182, 0.85), transparent); }
+        .chemistry-card .image-overlay { background: linear-gradient(to top, rgba(243, 156, 18, 0.85), transparent); }
+        .chinese-card .image-overlay { background: linear-gradient(to top, rgba(231, 76, 60, 0.85), transparent); }
+        .english-card .image-overlay { background: linear-gradient(to top, rgba(46, 204, 113, 0.85), transparent); }
+        .biology-card .image-overlay { background: linear-gradient(to top, rgba(22, 160, 133, 0.85), transparent); }
+        
+        /* 页脚样式 - 添加ICP备案信息 */
+        footer {
+            background: linear-gradient(90deg, #0f1c5d 0%, #1a5f9e 100%);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+            bottom: 0;
+            left: 0;
+            border-radius: 2px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-column a:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+        
+        .footer-column a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .contact-info {
+            margin-top: 15px;
+        }
+        
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            width: 20px;
+            color: var(--accent);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .icp-info {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 10px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-5px);
+        }
+        
+        /* 响应式设计 - 断点设置 */
+        @media (max-width: 1200px) {
+            .image-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+            
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .nav-item {
+                margin: 0 5px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .image-card {
+                height: 350px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: rgba(26, 41, 128, 0.95);
+                border-radius: 10px;
+                margin-top: 15px;
+                padding: 15px 0;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .nav-item {
+                margin: 5px 0;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .nav-link {
+                justify-content: center;
+                border-radius: 0;
+                padding: 12px;
+            }
+            
+            .image-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+                max-width: 600px;
+            }
+            
+            .image-card {
+                height: 400px;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .logo i {
+                font-size: 1.8rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .image-card {
+                height: 300px;
+            }
+            
+            .image-overlay {
+                padding: 20px 15px 15px;
+            }
+            
+            .image-title {
+                font-size: 1.4rem;
+            }
+            
+            .image-desc {
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .image-card {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div class="logo-text">高中数学<span>驿站</span></div>
+                </a>
+                
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item">
+                        <a href="zixueyuandi/zixueyuandi.html" class="nav-link">
+                            <i class="fas fa-calculator"></i>
+                            自学园地
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="haotixinshang/haotixinshang.html" class="nav-link">
+                            <i class="fas fa-atom"></i>
+                            好题欣赏
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="zenyangjieti/zenyangjieti.html" class="nav-link">
+                            <i class="fas fa-flask"></i>
+                            怎样解题
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="tuozhanxuexi/tuozhanxuexi.html" class="nav-link">
+                            <i class="fas fa-book"></i>
+                            拓展学习
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="ziceshijuan/ziceshijuan.html" class="nav-link">
+                            <i class="fas fa-language"></i>
+                            自测试卷
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="fufeizhuanlan/fufeizhuanlan.html" class="nav-link">
+                            <i class="fas fa-dna"></i>
+                            付费栏目
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
-      </div>
-      
-      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
-        <p>&copy; 2025 学科导航. 保留所有权利.</p>
-      </div>
-    </div>
-  </footer>
+    </header>
+    
+    <!-- 主体内容区域 -->
+    <main>
+        <div class="container">
+            <div class="section-title">
+                <h2>探索知识世界</h2>
+            </div>
+            
+            <div class="image-grid">
+                <!-- 第一行图片 -->
+                <div class="image-card math-card">
+                    <a href="zixueyuandi/zixueyuandi.html">
+                        <img src="photo/zx.jpg" alt="数学学科">
+                        <div class="image-overlay">
+                            <h3 class="image-title">自学园地</h3>
+                            <p class="image-desc">精心编制的《高中数学速成教程》，助你30天即可掌握新人教版《高中数学》教材的所有内容。</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="image-card physics-card">
+                    <a href="haotixinshang/haotixinshang.html">
+                        <img src="photo/ht.jpg" alt="物理学科">
+                        <div class="image-overlay">
+                            <h3 class="image-title">好题欣赏</h3>
+                            <p class="image-desc">多做好题，增长知识的同时，也提升你的解题能力和解题技巧，提升你学习数学的欲望。</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="image-card chemistry-card">
+                    <a href="zenyangjieti/zenyangjieti.html">
+                        <img src="photo/zy.jpg" alt="化学学科">
+                        <div class="image-overlay">
+                            <h3 class="image-title">怎样解题</h3>
+                            <p class="image-desc">向你提供一些老师、学霸、数学大咖的解题思路，连高考中偏分的思想我们也不放过。</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- 第二行图片 -->
+                <div class="image-card chinese-card">
+                    <a href="tuozhanxuexi/tuozhanxuexi.html">
+                        <img src="photo/gk.jpg" alt="语文学科">
+                        <div class="image-overlay">
+                            <h3 class="image-title">拓展学习</h3>
+                            <p class="image-desc">拓展学习，开阔视野，掌握更多解题方法和技巧。</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="image-card english-card">
+                    <a href="ziceshijuan/ziceshijuan.html">
+                        <img src="photo/sp.jpg" alt="英语学科">
+                        <div class="image-overlay">
+                            <h3 class="image-title">自测试卷</h3>
+                            <p class="image-desc">提供一些顶级名校的卷子，供你实时检查自己的学习情况。</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="image-card biology-card">
+                    <a href="fufeizhuanlan/fufeizhuanlan.html">
+                        <img src="photo/sw.jpg" alt="">
+                        <div class="image-overlay">
+                            <h3 class="image-title">付费栏目</h3>
+                            <p class="image-desc">这部分资料有些是我们自己开发的，具有完全自主知识产权，有的属于二次开发，由于付出太多，都不能白嫖哟。</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
 
-  <script>
-    // 移动端菜单切换
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
+    <!-- 页脚 - 添加了ICP备案和联系信息 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+            </div>
+            <div class="footer-bottom">
+                <div class="icp-info">
+                    <p>京ICP备12345678号-1 | 京公网安备11010802012345号 | 出版物经营许可证：新出发京字第12345号</p>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-weibo"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                </div>
+                <p class="copyright">© 2015-2028 高中数学驿站 版权所有</p>
+            </div>
+        </div>
+    </footer>
     
-    menuToggle.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-    
-    // 导航栏滚动效果
-    const navbar = document.getElementById('navbar');
-    
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 10) {
-        navbar.classList.add('py-2', 'shadow-lg');
-        navbar.classList.remove('py-3', 'shadow-md');
-      } else {
-        navbar.classList.add('py-3', 'shadow-md');
-        navbar.classList.remove('py-2', 'shadow-lg');
-      }
-    });
-    
-    // 为了演示效果，添加页面加载动画
-    document.addEventListener('DOMContentLoaded', () => {
-      const cards = document.querySelectorAll('.subject-card');
-      cards.forEach((card, index) => {
-        setTimeout(() => {
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        }, 100 * index);
-      });
-    });
-  </script>
+    <script>
+        // 移动端菜单切换
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const icon = menuToggle.querySelector('i');
+            if (navMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // 图片悬停效果增强
+        document.querySelectorAll('.image-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                setTimeout(() => {
+                    this.style.zIndex = '1';
+                }, 300);
+            });
+        });
+        
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                header.style.background = 'linear-gradient(90deg, var(--primary) 0%, #1a5f9e 100%)';
+            } else {
+                header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                header.style.background = 'linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%)';
+            }
+        });
+        
+        // 自动关闭移动端菜单当点击链接时
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    navMenu.classList.remove('active');
+                    menuToggle.querySelector('i').classList.remove('fa-times');
+                    menuToggle.querySelector('i').classList.add('fa-bars');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
-    
