@@ -3,523 +3,1161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>付费阅读 - 精品电子书商城</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>高考数学资料库 - 付费阅读平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --radius: 10px;
+            --transition: all 0.3s ease;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #8b0000 0%, #5a0000 100%);
-            color: #fff;
-            background-attachment: fixed;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* 头部样式 */
-        header {
-            text-align: center;
-            padding: 40px 0;
-            background: linear-gradient(to right, #8b0000, #5a0000);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-            margin-bottom: 30px;
-        }
-        
-        header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(to right, #d4af37, #ffd700, #d4af37);
-        }
-        
-        h1 {
-            font-size: 3.5rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 15px;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-            color: #ffd700;
-            position: relative;
-            display: inline-block;
-        }
-        
-        h1::after {
-            content: "";
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 4px;
-            background: linear-gradient(to right, #d4af37, #ffd700, #d4af37);
-            border-radius: 2px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto;
-            color: #ffddaa;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
             line-height: 1.6;
+            min-height: 100vh;
         }
         
-        /* 产品网格布局 */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 30px;
-            padding: 20px;
-        }
-        
-        .product-card {
-            background: linear-gradient(145deg, #ffffff 0%, #fff8e1 100%);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: #333;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(255, 215, 0, 0.4);
-        }
-        
-        .product-image {
-            height: 220px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        .product-card:hover .product-image img {
-            transform: scale(1.05);
-        }
-        
-        .product-image::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: linear-gradient(to top, rgba(255, 255, 255, 0.9), transparent);
-        }
-        
-        .product-info {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .product-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #8b0000;
-            min-height: 52px;
-        }
-        
-        .product-description {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 15px;
-            line-height: 1.5;
-            flex-grow: 1;
-        }
-        
-        .price-container {
+        /* 导航栏样式 */
+        .navbar {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 2px dashed #e0e0e0;
-            padding-top: 15px;
-            margin-top: auto;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
-        .original-price {
-            text-decoration: line-through;
-            color: #999;
-            font-size: 0.9rem;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
         
-        .discount-price {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #c00;
-            text-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+        .logo i {
+            font-size: 2rem;
         }
         
-        .discount-badge {
-            background: linear-gradient(to right, #ff9800, #f44336);
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
             color: white;
-            padding: 3px 10px;
-            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #e01b6f;
+            transform: translateY(-2px);
+        }
+        
+        /* 页面主体样式 */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--secondary);
+        }
+        
+        .page-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-title p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* 资料卡片网格 */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .resource-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            position: relative;
+        }
+        
+        .card-image {
+            height: 180px;
+            background: linear-gradient(45deg, #4361ee, #3a0ca3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+        }
+        
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--warning);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
             font-size: 0.8rem;
             font-weight: bold;
         }
         
-        /* 返回首页按钮 */
-        .home-button {
+        .free-badge {
+            background: var(--success);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--dark);
+        }
+        
+        .card-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 1.2rem;
+        }
+        
+        .card-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--warning);
+            margin: 0.5rem 0;
+            text-align: right;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+        
+        /* 管理员面板 */
+        .admin-panel {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 1rem;
+        }
+        
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-tab {
+            padding: 0.8rem 1.5rem;
+            background: #f0f4ff;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .admin-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .admin-content {
+            display: none;
+        }
+        
+        .admin-content.active {
+            display: block;
+        }
+        
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: #f9fbff;
+        }
+        
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #444;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
-            color: #8b0000;
-            width: 70px;
-            height: 70px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: modalAppear 0.4s ease;
+        }
+        
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.5rem;
+        }
+        
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        /* 账户管理样式 */
+        .account-section {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .account-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .balance-display {
+            font-size: 1.8rem;
+            color: var(--warning);
+            font-weight: bold;
+        }
+        
+        .balance-display span {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-right: 0.5rem;
+        }
+        
+        .recharge-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .recharge-option {
+            background: var(--light);
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            padding: 1.5rem 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .recharge-option:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .recharge-option.selected {
+            border-color: var(--accent);
+            background: rgba(67, 97, 238, 0.1);
+            position: relative;
+        }
+        
+        .recharge-option.selected::after {
+            content: "✓";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--accent);
+            color: white;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            text-decoration: none;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 215, 0, 0.6);
-            transition: all 0.3s ease;
-            z-index: 1000;
+            font-weight: bold;
         }
         
-        .home-button:hover {
-            transform: scale(1.1) rotate(10deg);
-            box-shadow: 0 7px 25px rgba(0, 0, 0, 0.4), 0 0 25px rgba(255, 215, 0, 0.8);
+        .recharge-amount {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--dark);
         }
         
-        /* 页脚 */
-        footer {
-            text-align: center;
-            padding: 30px 0;
-            margin-top: 50px;
-            color: #ffddaa;
-            border-top: 1px solid rgba(255, 215, 0, 0.3);
-        }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 20px 0;
-        }
-        
-        .footer-links a {
-            color: #ffd700;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        
-        .footer-links a:hover {
-            text-decoration: underline;
-            transform: translateY(-2px);
-        }
-        
-        .copyright {
+        .recharge-bonus {
+            color: var(--accent);
             font-size: 0.9rem;
-            opacity: 0.8;
+            margin-top: 0.3rem;
+        }
+        
+        /* 阅读器样式 */
+        .reader-container {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+        
+        .reader-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .reader-content {
+            padding: 2rem;
+            min-height: 500px;
+            background: #f9f9f9;
+        }
+        
+        .math-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .math-content h3 {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .math-question {
+            margin-bottom: 1.5rem;
+            padding: 1.2rem;
+            background: #f8f9ff;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+        
+        .timer {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
         }
         
         /* 响应式设计 */
-        @media (max-width: 1100px) {
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-        }
-        
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
             }
             
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 20px;
+            .nav-links {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             
-            .product-image {
-                height: 180px;
+            .resources-grid {
+                grid-template-columns: 1fr;
             }
             
-            .product-info {
-                padding: 15px;
+            .recharge-options {
+                grid-template-columns: repeat(2, 1fr);
             }
             
-            .product-title {
-                font-size: 1rem;
-                min-height: 44px;
-            }
-            
-            .discount-price {
-                font-size: 1.2rem;
+            .admin-tabs {
+                flex-direction: column;
             }
         }
         
         @media (max-width: 480px) {
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 15px;
+            .page-title h1 {
+                font-size: 2rem;
             }
             
-            .product-image {
-                height: 150px;
+            .card-actions {
+                flex-direction: column;
             }
             
-            .home-button {
-                width: 60px;
-                height: 60px;
-                font-size: 1.3rem;
-                bottom: 20px;
-                right: 20px;
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
+        }
+        
+        /* 工具提示 */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* 动画效果 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* 上传成功提示 */
+        .upload-success {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-top: 1rem;
+            display: none;
         }
     </style>
 </head>
 <body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-calculator"></i>
+            <span>高考数学资料库</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="active"><i class="fas fa-home"></i> 首页</a>
+            <a href="#"><i class="fas fa-book"></i> 资料分类</a>
+            <a href="#"><i class="fas fa-gift"></i> 优惠活动</a>
+            <a href="#"><i class="fas fa-question-circle"></i> 帮助中心</a>
+            <a href="#admin"><i class="fas fa-user-cog"></i> 管理员</a>
+        </div>
+        <div class="user-section">
+            <span id="usernameDisplay">管理员</span>
+            <button class="btn btn-outline" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</button>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
     <div class="container">
-        <header>
-            <h1><i class="fas fa-book-open"></i> 付费阅读</h1>
-            <p class="subtitle">探索知识的海洋，这一部分知识不能白嫖哟。</p>
-        </header>
-        
-        <main class="products-grid">
-            <!-- 产品卡片 1 -->
-            <div class="product-card">
-                <a href="book1-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=600&q=80" alt="时间简史">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">《高中数学速成教程》</h3>
-                    <p class="product-description">经典之作，让你一个月时间即可掌握现行高中数学教材中的所有内容，80%以上的例题带视频讲解，详情请点击上面的图片</p>
-                    <div class="price-container">
-                        <div>
-                            <span class="original-price">¥12000.00</span>
-                            <div class="discount-price">¥2000.00</div>
+        <div class="page-title">
+            <h1>高考数学精品资料库</h1>
+            <p>精选历年高考数学真题解析、专题突破、模拟试卷等资源，助力高考冲刺</p>
+        </div>
+
+        <!-- 资料卡片网格 -->
+        <div class="resources-grid" id="resourcesContainer">
+            <!-- 资料卡片将通过JavaScript动态生成 -->
+        </div>
+
+        <!-- 管理员面板 -->
+        <div class="admin-panel" id="admin">
+            <div class="admin-header">
+                <h2><i class="fas fa-user-cog"></i> 管理员资料管理</h2>
+                <div class="tooltip">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="tooltip-text">在此区域上传和管理您的资料，可设置为免费或付费阅读</div>
+                </div>
+            </div>
+            
+            <div class="admin-tabs">
+                <div class="admin-tab active" data-tab="upload">上传新资料</div>
+                <div class="admin-tab" data-tab="manage">管理现有资料</div>
+                <div class="admin-tab" data-tab="settings">付费设置</div>
+            </div>
+            
+            <!-- 上传资料表单 -->
+            <div class="admin-content active" id="uploadTab">
+                <div class="upload-area" id="dropArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>拖放文件到此处上传</h3>
+                    <p>支持PDF和图片格式 (JPG, PNG)</p>
+                    <p>或</p>
+                    <button class="btn btn-primary" id="browseBtn">选择文件</button>
+                    <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none">
+                </div>
+                
+                <div class="upload-success" id="uploadSuccess">
+                    <i class="fas fa-check-circle"></i> 资料上传成功！您现在可以设置资料信息。
+                </div>
+                
+                <div class="form-group">
+                    <label for="resourceTitle">资料标题</label>
+                    <input type="text" id="resourceTitle" class="form-control" placeholder="输入资料标题">
+                </div>
+                
+                <div class="form-group">
+                    <label for="resourceDesc">资料描述</label>
+                    <textarea id="resourceDesc" class="form-control" rows="3" placeholder="输入资料描述"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>资料类型</label>
+                    <div style="display:flex; gap:1rem;">
+                        <label style="display:flex;align-items:center;gap:0.5rem;">
+                            <input type="radio" name="resourceType" value="free" checked> 免费资料
+                        </label>
+                        <label style="display:flex;align-items:center;gap:0.5rem;">
+                            <input type="radio" name="resourceType" value="paid"> 付费资料
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="priceSection" style="display:none;">
+                    <div class="form-group">
+                        <label for="resourcePrice">价格 (元)</label>
+                        <input type="number" id="resourcePrice" class="form-control" placeholder="输入价格" min="0" step="0.01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="accessDuration">阅读有效期 (小时)</label>
+                        <input type="number" id="accessDuration" class="form-control" placeholder="输入有效期" min="1" value="72">
+                        <small>用户付费后可以在此时间内重复阅读</small>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" style="width:100%" id="saveResourceBtn">
+                    <i class="fas fa-save"></i> 保存资料设置
+                </button>
+            </div>
+            
+            <!-- 管理现有资料 -->
+            <div class="admin-content" id="manageTab">
+                <h3>已上传资料列表</h3>
+                <div class="form-group">
+                    <input type="text" id="searchResources" class="form-control" placeholder="搜索资料...">
+                </div>
+                
+                <div id="resourcesList">
+                    <!-- 资料列表将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 付费设置 -->
+            <div class="admin-content" id="settingsTab">
+                <h3>付费设置</h3>
+                
+                <div class="form-group">
+                    <label for="defaultDuration">默认阅读有效期 (小时)</label>
+                    <input type="number" id="defaultDuration" class="form-control" value="72" min="1">
+                </div>
+                
+                <div class="form-group">
+                    <label>新用户注册奖励</label>
+                    <input type="number" id="signupBonus" class="form-control" placeholder="输入奖励金额" min="0" step="0.01" value="5.00">
+                </div>
+                
+                <div class="form-group">
+                    <label>充值优惠设置</label>
+                    <div style="background:#f8f9fa; border-radius:var(--radius); padding:1rem; margin-top:0.5rem;">
+                        <div class="form-group" style="display:flex; gap:1rem; align-items:center;">
+                            <span>充值满</span>
+                            <input type="number" class="form-control" style="width:100px;" value="30" min="0">
+                            <span>元，赠送</span>
+                            <input type="number" class="form-control" style="width:100px;" value="3" min="0">
+                            <span>元</span>
                         </div>
-                        <div class="discount-badge">-85%</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 产品卡片 2 -->
-            <div class="product-card">
-                <a href="book2-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=600&q=80" alt="人工智能导论">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">《高考数学选填题解题方法与技巧》</h3>
-                    <p class="product-description">要想数学学得好，必须掌握数学学科特有的解题技巧，80%以上的例题带视频讲解，详情请点击上面的图片。</p>
-                    <div class="price-container">
-                        <div>
-                            <span class="original-price">¥4000.00</span>
-                            <div class="discount-price">¥1500.00</div>
+                        <div class="form-group" style="display:flex; gap:1rem; align-items:center;">
+                            <span>充值满</span>
+                            <input type="number" class="form-control" style="width:100px;" value="50" min="0">
+                            <span>元，赠送</span>
+                            <input type="number" class="form-control" style="width:100px;" value="8" min="0">
+                            <span>元</span>
                         </div>
-                        <div class="discount-badge">限时特惠</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 产品卡片 3 -->
-            <div class="product-card">
-                <a href="book3-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80" alt="经济学原理">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">《高考数学解答题解题方法与技巧》</h3>
-                    <p class="product-description">要想数学学得好，必须掌握数学学科特有的解题技巧，80%以上的例题带视频讲解，详情请点击上面的图片。</p>
-                    <div class="price-container">
-                        <div class="discount-price">¥1500.00</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 产品卡片 4 -->
-            <div class="product-card">
-                <a href="book4-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1463320726281-696a485928c7?auto=format&fit=crop&w=600&q=80" alt="人类简史">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">人类简史：从动物到上帝</h3>
-                    <p class="product-description">尤瓦尔·赫拉利力作，重新审视人类发展历程，颠覆传统认知。</p>
-                    <div class="price-container">
-                        <div>
-                            <span class="original-price">¥75.00</span>
-                            <div class="discount-price">¥52.00</div>
+                        <div class="form-group" style="display:flex; gap:1rem; align-items:center;">
+                            <span>充值满</span>
+                            <input type="number" class="form-control" style="width:100px;" value="100" min="0">
+                            <span>元，赠送</span>
+                            <input type="number" class="form-control" style="width:100px;" value="20" min="0">
+                            <span>元</span>
                         </div>
-                        <div class="discount-badge">-31%</div>
                     </div>
                 </div>
+                
+                <button class="btn btn-primary">
+                    <i class="fas fa-save"></i> 保存设置
+                </button>
             </div>
-            
-            <!-- 产品卡片 5 -->
-            <div class="product-card">
-                <a href="book5-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=600&q=80" alt="设计心理学">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">设计心理学：日常的设计</h3>
-                    <p class="product-description">唐纳德·诺曼经典著作，揭示优秀设计背后的心理学原理。</p>
-                    <div class="price-container">
-                        <div>
-                            <span class="original-price">¥62.00</span>
-                            <div class="discount-price">¥39.90</div>
-                        </div>
-                        <div class="discount-badge">特价</div>
-                    </div>
-                </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fas fa-calculator"></i>
+                <span>高考数学资料库</span>
             </div>
-            
-            <!-- 产品卡片 6 -->
-            <div class="product-card">
-                <a href="book6-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=600&q=80" alt="区块链革命">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">区块链革命：比特币背后的技术</h3>
-                    <p class="product-description">全面解析区块链技术原理与应用场景，探索未来数字经济新模式。</p>
-                    <div class="price-container">
-                        <div class="discount-price">¥66.00</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 产品卡片 7 -->
-            <div class="product-card">
-                <a href="book7-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1589998059171-988d887df646?auto=format&fit=crop&w=600&q=80" alt="高效能人士的七个习惯">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">高效能人士的七个习惯</h3>
-                    <p class="product-description">全球畅销的个人成长经典，培养高效能思维模式，实现自我突破。</p>
-                    <div class="price-container">
-                        <div>
-                            <span class="original-price">¥58.00</span>
-                            <div class="discount-price">¥36.90</div>
-                        </div>
-                        <div class="discount-badge">-36%</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 产品卡片 8 -->
-            <div class="product-card">
-                <a href="book8-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=600&q=80" alt="百年孤独">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">百年孤独：马尔克斯传世经典</h3>
-                    <p class="product-description">魔幻现实主义巅峰之作，布恩迪亚家族七代人的传奇故事。</p>
-                    <div class="price-container">
-                        <div class="discount-price">¥42.00</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 产品卡片 9 -->
-            <div class="product-card">
-                <a href="book9-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80" alt="宇宙的奇迹">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">宇宙的奇迹：探索未知的边界</h3>
-                    <p class="product-description">从星系到黑洞，从暗物质到暗能量，揭开宇宙的神秘面纱。</p>
-                    <div class="price-container">
-                        <div>
-                            <span class="original-price">¥72.00</span>
-                            <div class="discount-price">¥54.90</div>
-                        </div>
-                        <div class="discount-badge">-24%</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 产品卡片 10 -->
-            <div class="product-card">
-                <a href="book10-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=600&q=80" alt="编程艺术">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">编程艺术：代码之美与优雅</h3>
-                    <p class="product-description">探索编程的艺术性，学习如何编写优雅、高效、可维护的代码。</p>
-                    <div class="price-container">
-                        <div>
-                            <span class="original-price">¥65.00</span>
-                            <div class="discount-price">¥48.00</div>
-                        </div>
-                        <div class="discount-badge">-26%</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 产品卡片 11 -->
-            <div class="product-card">
-                <a href="book11-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=600&q=80" alt="历史转折点">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">历史转折点：改变世界的重大事件</h3>
-                    <p class="product-description">从古至今，那些改变人类历史进程的关键时刻与决策分析。</p>
-                    <div class="price-container">
-                        <div class="discount-price">¥56.00</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 产品卡片 12 -->
-            <div class="product-card">
-                <a href="book12-details.pdf" class="product-image">
-                    <img src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=600&q=80" alt="哲学的慰藉">
-                </a>
-                <div class="product-info">
-                    <h3 class="product-title">哲学的慰藉：古人的智慧启示</h3>
-                    <p class="product-description">从苏格拉底到尼采，探索哲学家如何解答生命中的困惑与难题。</p>
-                    <div class="price-container">
-                        <div>
-                            <span class="original-price">¥60.00</span>
-                            <div class="discount-price">¥45.00</div>
-                        </div>
-                        <div class="discount-badge">-25%</div>
-                    </div>
-                </div>
-            </div>
-        </main>
-        
-        <footer>
             <div class="footer-links">
                 <a href="#">关于我们</a>
                 <a href="#">用户协议</a>
                 <a href="#">隐私政策</a>
+                <a href="#">版权声明</a>
                 <a href="#">联系我们</a>
+                <a href="#">加入我们</a>
             </div>
-            <p class="copyright">© 2023 付费阅读 - 精品电子书商城 版权所有</p>
-        </footer>
-    </div>
-    
-    <!-- 返回首页按钮 -->
-    <a href="../index.html" class="home-button">
-        <i class="fas fa-home"></i>
-    </a>
+            <div class="copyright">
+                © 2023 高考数学资料库 版权所有 | 打造最专业的高考数学学习平台
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 模拟数据
+        let userBalance = 50.00;
+        let resources = [
+            {
+                id: 1,
+                title: "函数与导数专题突破",
+                description: "涵盖函数性质、图像变换、导数应用等核心考点，包含典型例题和解题技巧。",
+                type: "free",
+                price: 0,
+                pages: 42,
+                thumbnail: "chart-bar",
+                accessDuration: 0
+            },
+            {
+                id: 2,
+                title: "立体几何解题秘籍",
+                description: "空间向量法、传统几何法双管齐下，解决各类空间几何问题，含高考真题解析。",
+                type: "paid",
+                price: 12.8,
+                pages: 36,
+                thumbnail: "shapes",
+                accessDuration: 72
+            },
+            {
+                id: 3,
+                title: "数列与不等式综合训练",
+                description: "递推关系求解、放缩技巧、数学归纳法等高级解题方法精讲，含最新模拟题。",
+                type: "paid",
+                price: 9.9,
+                pages: 28,
+                thumbnail: "infinity",
+                accessDuration: 72
+            },
+            {
+                id: 4,
+                title: "解析几何解题模板",
+                description: "直线与圆、圆锥曲线等核心题型解题模板，快速掌握解题套路，提高解题效率。",
+                type: "free",
+                price: 0,
+                pages: 31,
+                thumbnail: "project-diagram",
+                accessDuration: 0
+            }
+        ];
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 更新余额显示
+            document.getElementById('balanceAmount').textContent = userBalance.toFixed(2);
+            
+            // 渲染资料卡片
+            renderResourceCards();
+            
+            // 渲染资料管理列表
+            renderResourceList();
+            
+            // 管理员标签切换
+            const tabs = document.querySelectorAll('.admin-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const tabId = this.getAttribute('data-tab');
+                    document.querySelectorAll('.admin-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabId + 'Tab').classList.add('active');
+                });
+            });
+            
+            // 付费资料类型切换
+            const resourceTypeRadios = document.querySelectorAll('input[name="resourceType"]');
+            resourceTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.getElementById('priceSection').style.display = 
+                        this.value === 'paid' ? 'block' : 'none';
+                });
+            });
+            
+            // 文件上传处理
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            const browseBtn = document.getElementById('browseBtn');
+            
+            browseBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // 拖放事件
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.style.borderColor = var(--accent);
+                dropArea.style.backgroundColor = '#f0f5ff';
+            }
+            
+            function unhighlight() {
+                dropArea.style.borderColor = '#ccc';
+                dropArea.style.backgroundColor = '';
+            }
+            
+            dropArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+            
+            function handleFileSelect(e) {
+                const files = e.target.files;
+                handleFiles(files);
+            }
+            
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    // 这里模拟文件上传
+                    document.getElementById('uploadSuccess').style.display = 'block';
+                    dropArea.innerHTML = `
+                        <i class="fas fa-check-circle" style="color:#28a745;"></i>
+                        <h3>已选择 ${files.length} 个文件</h3>
+                        <p>${Array.from(files).map(f => f.name).join(', ')}</p>
+                    `;
+                }
+            }
+            
+            // 保存资料
+            document.getElementById('saveResourceBtn').addEventListener('click', function() {
+                const title = document.getElementById('resourceTitle').value;
+                const desc = document.getElementById('resourceDesc').value;
+                const type = document.querySelector('input[name="resourceType"]:checked').value;
+                const price = type === 'paid' ? parseFloat(document.getElementById('resourcePrice').value) : 0;
+                const duration = type === 'paid' ? parseInt(document.getElementById('accessDuration').value) : 0;
+                
+                if (!title || !desc) {
+                    alert('请填写标题和描述');
+                    return;
+                }
+                
+                if (type === 'paid' && (isNaN(price) || price <= 0)) {
+                    alert('请输入有效的价格');
+                    return;
+                }
+                
+                // 创建新资料
+                const newResource = {
+                    id: resources.length + 1,
+                    title: title,
+                    description: desc,
+                    type: type,
+                    price: price,
+                    pages: Math.floor(Math.random() * 30) + 20, // 随机页数
+                    thumbnail: getRandomThumbnail(),
+                    accessDuration: duration
+                };
+                
+                resources.push(newResource);
+                
+                // 更新界面
+                renderResourceCards();
+                renderResourceList();
+                
+                // 重置表单
+                document.getElementById('resourceTitle').value = '';
+                document.getElementById('resourceDesc').value = '';
+                document.querySelector('input[name="resourceType"][value="free"]').checked = true;
+                document.getElementById('priceSection').style.display = 'none';
+                document.getElementById('uploadSuccess').style.display = 'none';
+                dropArea.innerHTML = `
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>拖放文件到此处上传</h3>
+                    <p>支持PDF和图片格式 (JPG, PNG)</p>
+                    <p>或</p>
+                    <button class="btn btn-primary" id="browseBtn">选择文件</button>
+                `;
+                document.getElementById('browseBtn').addEventListener('click', function() {
+                    fileInput.click();
+                });
+                
+                alert('资料添加成功！');
+            });
+            
+            // 资料搜索
+            document.getElementById('searchResources').addEventListener('input', function() {
+                renderResourceList(this.value);
+            });
+        });
+        
+        // 渲染资料卡片
+        function renderResourceCards() {
+            const container = document.getElementById('resourcesContainer');
+            container.innerHTML = '';
+            
+            resources.forEach(resource => {
+                const card = document.createElement('div');
+                card.className = 'resource-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-image">
+                            <i class="fas fa-${resource.thumbnail}"></i>
+                        </div>
+                        ${resource.type === 'paid' ? 
+                            `<div class="card-badge">付费资料</div>` : 
+                            `<div class="card-badge free-badge">免费资料</div>`
+                        }
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">${resource.title}</h3>
+                        <p class="card-description">${resource.description}</p>
+                        <div class="card-meta">
+                            <span><i class="far fa-file-pdf"></i> PDF/图片</span>
+                            <span><i class="far fa-clock"></i> ${resource.pages}页</span>
+                        </div>
+                        ${resource.type === 'paid' ? 
+                            `<div class="card-price">¥${resource.price.toFixed(2)}</div>` : ''
+                        }
+                        <div class="card-actions">
+                            ${resource.type === 'free' ? 
+                                `<button class="btn btn-primary" style="flex:1"><i class="fas fa-book-open"></i> 免费阅读</button>` :
+                                `<button class="btn btn-warning" style="flex:1"><i class="fas fa-lock-open"></i> 购买阅读</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        // 渲染资料管理列表
+        function renderResourceList(searchTerm = '') {
+            const container = document.getElementById('resourcesList');
+            container.innerHTML = '';
+            
+            const filteredResources = resources.filter(resource => 
+                resource.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                resource.description.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            if (filteredResources.length === 0) {
+                container.innerHTML = '<p>没有找到匹配的资料</p>';
+                return;
+            }
+            
+            filteredResources.forEach(resource => {
+                const item = document.createElement('div');
+                item.className = 'resource-card';
+                item.style.marginBottom = '1rem';
+                item.innerHTML = `
+                    <div class="card-body" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 class="card-title">${resource.title}</h3>
+                            <p class="card-description" style="margin-bottom:0;">${resource.description}</p>
+                            <div class="card-meta" style="margin-bottom:0;">
+                                <span>${resource.type === 'paid' ? '付费资料' : '免费资料'}</span>
+                                <span>${resource.pages}页</span>
+                                ${resource.type === 'paid' ? 
+                                    `<span>¥${resource.price.toFixed(2)}</span>` : ''
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline" style="border-color:#ccc; color:#333;">
+                                <i class="fas fa-edit"></i> 编辑
+                            </button>
+                            <button class="btn btn-outline" style="border-color:#ccc; color:#333; margin-left:0.5rem;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        // 获取随机图标
+        function getRandomThumbnail() {
+            const icons = ['chart-bar', 'shapes', 'infinity', 'project-diagram', 
+                           'chart-line', 'cube', 'draw-polygon', 'function'];
+            return icons[Math.floor(Math.random() * icons.length)];
+        }
+    </script>
 </body>
 </html>
