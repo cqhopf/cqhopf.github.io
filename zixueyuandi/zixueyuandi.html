@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教材阅读 - PDF阅读器</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* 顶部导航栏 - 模拟一级页面导航 */
+        .top-nav {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 15px 5%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 主内容区域 */
+        .main-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 70px);
+        }
+        
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 280px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 15px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            color: #1a237e;
+        }
+        
+        .chapters {
+            list-style: none;
+        }
+        
+        .chapter {
+            margin-bottom: 5px;
+        }
+        
+        .chapter-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #333;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+        
+        .chapter-title:hover {
+            background-color: #eef2f7;
+            border-left-color: #5c6bc0;
+        }
+        
+        .chapter-title.active {
+            background-color: #e8eaf6;
+            border-left-color: #1a237e;
+            color: #1a237e;
+        }
+        
+        .sections {
+            list-style: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background-color: #fafafa;
+        }
+        
+        .chapter.active .sections {
+            max-height: 500px; /* 足够容纳所有子项 */
+        }
+        
+        .section-item {
+            padding: 10px 20px 10px 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-item:before {
+            content: "•";
+            margin-right: 8px;
+            color: #5c6bc0;
+        }
+        
+        .section-item:hover {
+            background-color: #e8eaf6;
+            color: #1a237e;
+        }
+        
+        .section-item.active {
+            background-color: #d1c4e9;
+            color: #1a237e;
+            font-weight: 500;
+        }
+        
+        /* PDF阅读区 */
+        .content-area {
+            flex: 1;
+            padding: 25px;
+            background-color: #f5f7ff;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .pdf-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .pdf-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .pdf-header h2 {
+            color: #1a237e;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .pdf-header h2 i {
+            margin-right: 10px;
+            color: #d32f2f;
+        }
+        
+        .pdf-controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .pdf-controls button {
+            background: #3f51b5;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .pdf-controls button:hover {
+            background: #303f9f;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .pdf-controls button:disabled {
+            background: #9fa8da;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .pdf-viewer-container {
+            flex: 1;
+            background-color: #f1f3ff;
+            border: 1px solid #d1d9ff;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+        
+        .pdf-viewer {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border: none;
+        }
+        
+        .pdf-loading {
+            text-align: center;
+            padding: 30px;
+            color: #5c6bc0;
+        }
+        
+        .pdf-loading .spinner {
+            border: 4px solid rgba(92, 107, 192, 0.2);
+            border-radius: 50%;
+            border-top: 4px solid #3f51b5;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            
+            .content-area {
+                height: auto;
+                min-height: 60vh;
+            }
+        }
+        
+        /* 页脚 */
+        footer {
+            background: #1a237e;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 - 模拟一级页面 -->
+    <nav class="top-nav">
+        <div class="logo">
+            <span class="logo-icon">📚</span>
+            <span>高中数学驿站</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#">自学园地</a></li>
+            <li><a href="..\haotixinshang\haotixinshang.html" class="active">好题欣赏</a></li>
+            <li><a href="..\zenyangjieti\zenyangjieti.html">怎样解题</a></li>
+            <li><a href="..\tuozhanxuexi\tuozhanxuexi.html">拓展学习</a></li>
+            <li><a href="..\ziceshijuan\ziceshijuan.html">自测试卷</a></li>
+            <li><a href="..\fufeizhuanlan\fufeizhuanlan.html">付费专栏</a></li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-container">
+        <!-- 左侧导航 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>高中数学</h2>
+            </div>
+            <ul class="chapters">
+                <!-- 第一章 -->
+                <li class="chapter active">
+                    <div class="chapter-title">第一章 集合与常用逻辑用语</div>
+                    <ul class="sections">
+                        <li class="section-item active" data-pdf="chapter1-1.pdf">1.1 集合的概念及运算</li>
+                        <li class="section-item" data-pdf="chapter1-2.pdf">1.2 常用逻辑用语</li>
+                        <li class="section-item" data-pdf="chapter1-3.pdf">1.3 习题课</li>
+                    </ul>
+                </li>
+                
+                <!-- 第二章 -->
+                <li class="chapter">
+                    <div class="chapter-title">第二章 函数的概念及性质</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter2-1.pdf">2.1 函数的概念及其表示</li>
+                        <li class="section-item" data-pdf="chapter2-2.pdf">2.2 函数的单调性及周期性</li>
+                        <li class="section-item" data-pdf="chapter2-3.pdf">2.3 函数的奇偶性及其应用</li>
+                        <li class="section-item" data-pdf="chapter2-4.pdf">2.4 幂函数、一元二次函数及不等式</li>
+                        <li class="section-item" data-pdf="chapter2-5.pdf">2.5 习题课</li>
+                    </ul>
+                </li>
+                
+                <!-- 第三章 -->
+                <li class="chapter">
+                    <div class="chapter-title">第三章 指数函数与对数函数</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter3-1.pdf">3.1 指数函数与对数函数</li>
+                        <li class="section-item" data-pdf="chapter3-2.pdf">3.2 函数零点与方程</li>
+                        <li class="section-item" data-pdf="chapter3-3.pdf">3.3 习题课</li>
+                    </ul>
+                </li>
+                
+                <!-- 第四章到第十章省略部分内容 -->
+                <li class="chapter">
+                    <div class="chapter-title">第四章 三角函数</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter4-1.pdf">4.1 角、弧度及三角函数的概念</li>
+                        <li class="section-item" data-pdf="chapter4-2.pdf">4.2 三角恒等变换</li>
+                        <li class="section-item" data-pdf="chapter4-3.pdf">4.3 三角函数的图像</li>
+                        <li class="section-item" data-pdf="chapter4-4.pdf">4.4 正余弦定理及解三角形</li>
+                        <li class="section-item" data-pdf="chapter4-5.pdf">4.5 习题课</li>
+                    </ul>
+                </li>
+                
+                <li class="chapter">
+                    <div class="chapter-title">第五章 平面向量</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter5-1.pdf">5.1 平面向量的概念及运算</li>
+                        <li class="section-item" data-pdf="chapter5-2.pdf">5.2 平面向量基本定理</li>
+                        <li class="section-item" data-pdf="chapter5-3.pdf">5.3 习题课</li>
+                    </ul>
+                </li>
+                
+                <li class="chapter">
+                    <div class="chapter-title">第六章 复数</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter6-1.pdf">6.1 复数的概念及其运算</li>
+                    </ul>
+                </li>
+                
+                <li class="chapter">
+                    <div class="chapter-title">第七章 立体几何</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter7-1.pdf">7.1 空间几何体基础</li>
+                        <li class="section-item" data-pdf="chapter7-2.pdf">7.2 空间点、直线、平面间的位置关系</li>
+                        <li class="section-item" data-pdf="chapter7-3.pdf">7.3 直线、平面平行的判定定理与性质定理</li>
+                        <li class="section-item" data-pdf="chapter7-4.pdf">7.4 直线、平面垂直的判定定理和性质定理</li>
+                        <li class="section-item" data-pdf="chapter7-5.pdf">7.5 空间向量与立体几何</li>
+                        <li class="section-item" data-pdf="chapter7-6.pdf">7.6 习题课</li>
+                    </ul>
+                </li>
+                
+                <li class="chapter">
+                    <div class="chapter-title">第八章 直线与圆</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter8-1.pdf">8.1 直线方程</li>
+                        <li class="section-item" data-pdf="chapter8-2.pdf">8.2 圆的方程、直线与圆、圆与圆的位置关系</li>
+                    </ul>
+                </li>
+                
+                <li class="chapter">
+                    <div class="chapter-title">第九章 圆锥曲线</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter9-1.pdf">9.1 椭圆的定义及标准方程</li>
+                        <li class="section-item" data-pdf="chapter9-2.pdf">9.2 椭圆的性质</li>
+                        <li class="section-item" data-pdf="chapter9-3.pdf">9.3 双曲线的定义及标准方程</li>
+                        <li class="section-item" data-pdf="chapter9-4.pdf">9.4 双曲线的性质</li>
+                        <li class="section-item" data-pdf="chapter9-5.pdf">9.5 抛物线的定义及标准方程</li>
+                        <li class="section-item" data-pdf="chapter9-6.pdf">9.6 抛物线的性质</li>
+                        <li class="section-item" data-pdf="chapter9-7.pdf">9.7 习题课</li>
+                    </ul>
+                </li>
+                
+                <li class="chapter">
+                    <div class="chapter-title">第十章 数列</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter10-1.pdf">10.1 数列的概念</li>
+                        <li class="section-item" data-pdf="chapter10-2.pdf">10.2 等差数列及其性质</li>
+                        <li class="section-item" data-pdf="chapter10-3.pdf">10.3 等比数列及其性质</li>
+                        <li class="section-item" data-pdf="chapter10-4.pdf">10.4 习题课</li>
+                    </ul>
+                </li>
+                <li class="chapter">
+                    <div class="chapter-title">第十一章 导数及其应用</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter11-1.pdf">11.1 导数的概念及运算</li>
+                        <li class="section-item" data-pdf="chapter11-2.pdf">11.2 导数的性质及应用</li>
+                        <li class="section-item" data-pdf="chapter11-3.pdf">11.3 习题课</li>
+                    </ul>
+                </li>
+                <li class="chapter">
+                    <div class="chapter-title">第十二章 计数原理</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter12-1.pdf">12.1 排列、组合及二项式定理</li>
+                        <li class="section-item" data-pdf="chapter12-2.pdf">12.2 习题课</li>
+                    </ul>
+                </li>
+                <li class="chapter">
+                    <div class="chapter-title">第十三章 概率统计</div>
+                    <ul class="sections">
+                        <li class="section-item" data-pdf="chapter13-1.pdf">13.1 概率</li>
+                        <li class="section-item" data-pdf="chapter13-2.pdf">13.2 随机变量及其分布</li>
+                        <li class="section-item" data-pdf="chapter13-3.pdf">13.3 统计初步</li>
+                        <li class="section-item" data-pdf="chapter13-4.pdf">13.4 习题课</li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+        
+        <!-- 右侧内容区域 -->
+        <main class="content-area">
+            <div class="pdf-container">
+                <div class="pdf-header">
+                    <h2><i>📄</i> 第一章 函数与极限 - 1.1 函数的概念</h2>
+                    <p>最后更新: 2024年10月15日 | 作者: 数学教研室</p>
+                </div>
+                
+                <div class="pdf-controls">
+                    <div>
+                        <button id="prev-page" disabled>上一页</button>
+                        <button id="next-page">下一页</button>
+                    </div>
+                    <div>
+                        <button id="zoom-in">放大</button>
+                        <button id="zoom-out">缩小</button>
+                        <button id="download-pdf">下载PDF</button>
+                    </div>
+                </div>
+                
+                <div class="pdf-viewer-container">
+                    <!-- PDF加载状态 -->
+                    <div class="pdf-loading" id="pdf-loading">
+                        <div class="spinner"></div>
+                        <p>正在加载PDF文档，请稍候...</p>
+                    </div>
+                    
+                    <!-- PDF显示区域 -->
+                    <iframe class="pdf-viewer" id="pdf-viewer" src="" style="display: none;"></iframe>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <footer>
+        <p>© 2024 高中数学资驿站 | 提供高质量数学资源</p>
+    </footer>
+
+    <script>
+        // 初始化变量
+        let currentPDF = '';
+        let currentPage = 1;
+        let totalPages = 1;
+        let zoomLevel = 1.0;
+        
+        // 左侧导航交互功能
+        document.querySelectorAll('.chapter-title').forEach(title => {
+            title.addEventListener('click', function() {
+                const chapter = this.parentElement;
+                chapter.classList.toggle('active');
+            });
+        });
+        
+        // 章节选择功能
+        document.querySelectorAll('.section-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // 移除所有活动状态
+                document.querySelectorAll('.section-item').forEach(el => {
+                    el.classList.remove('active');
+                });
+                
+                // 设置当前活动状态
+                this.classList.add('active');
+                
+                // 更新标题
+                const chapterTitle = this.closest('.chapter').querySelector('.chapter-title').textContent;
+                const sectionTitle = this.textContent;
+                document.querySelector('.pdf-header h2').innerHTML = `<i>📄</i> ${chapterTitle} - ${sectionTitle}`;
+                
+                // 获取PDF路径
+                const pdfPath = this.getAttribute('data-pdf');
+                currentPDF = pdfPath;
+                
+                // 显示加载状态
+                document.getElementById('pdf-loading').style.display = 'block';
+                document.getElementById('pdf-viewer').style.display = 'none';
+                
+                // 模拟加载延迟
+                setTimeout(() => {
+                    // 在实际应用中，这里会加载对应的PDF
+                    const pdfViewer = document.getElementById('pdf-viewer');
+                    pdfViewer.src = pdfPath;
+                    
+                    // 隐藏加载状态，显示PDF
+                    document.getElementById('pdf-loading').style.display = 'none';
+                    pdfViewer.style.display = 'block';
+                    
+                    // 重置页面和缩放
+                    currentPage = 1;
+                    zoomLevel = 1.0;
+                    updatePagination();
+                }, 1000);
+            });
+        });
+        
+        // 翻页功能
+        document.getElementById('prev-page').addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePagination();
+            }
+        });
+        
+        document.getElementById('next-page').addEventListener('click', function() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePagination();
+            }
+        });
+        
+        // 缩放功能
+        document.getElementById('zoom-in').addEventListener('click', function() {
+            if (zoomLevel < 2.0) {
+                zoomLevel += 0.1;
+                applyZoom();
+            }
+        });
+        
+        document.getElementById('zoom-out').addEventListener('click', function() {
+            if (zoomLevel > 0.5) {
+                zoomLevel -= 0.1;
+                applyZoom();
+            }
+        });
+        
+        // 下载功能
+        document.getElementById('download-pdf').addEventListener('click', function() {
+            if (currentPDF) {
+                // 创建临时链接下载PDF
+                const link = document.createElement('a');
+                link.href = currentPDF;
+                link.download = currentPDF.split('/').pop() || 'document.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert('请先选择一个PDF文档');
+            }
+        });
+        
+        // 更新分页状态
+        function updatePagination() {
+            document.getElementById('prev-page').disabled = (currentPage <= 1);
+            document.getElementById('next-page').disabled = (currentPage >= totalPages);
+            
+            // 在实际应用中，这里会跳转到指定页面
+            console.log(`跳转到第 ${currentPage} 页`);
+        }
+        
+        // 应用缩放
+        function applyZoom() {
+            const pdfViewer = document.getElementById('pdf-viewer');
+            pdfViewer.style.transform = `scale(${zoomLevel})`;
+            pdfViewer.style.transformOrigin = '0 0';
+            pdfViewer.style.width = `${100 / zoomLevel}%`;
+            pdfViewer.style.height = `${100 / zoomLevel}%`;
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 激活第一个章节
+            const firstChapter = document.querySelector('.chapter');
+            if (firstChapter) firstChapter.classList.add('active');
+            
+            // 激活第一个章节的第一节
+            const firstSection = document.querySelector('.section-item');
+            if (firstSection) {
+                firstSection.classList.add('active');
+                // 触发点击事件加载PDF
+                firstSection.click();
+            }
+            
+            // 设置总页数（模拟）
+            totalPages = 15;
+        });
+    </script>
+</body>
+</html>
