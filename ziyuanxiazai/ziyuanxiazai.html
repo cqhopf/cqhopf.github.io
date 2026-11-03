@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>数学之美 · 简单才是美</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(145deg, #f7f2e8 0%, #ede5d5 100%);
+            font-family: 'Noto Serif SC', serif;
+            color: #3d2b1a;
+            min-height: 100vh;
+            padding: 30px 20px;
+            position: relative;
+        }
+        
+        /* ===== 顶部装饰光晕 ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(200, 180, 150, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -150px;
+            left: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(180, 160, 130, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ===== 头部 ===== */
+        .header {
+            text-align: center;
+            padding: 30px 20px 40px;
+            position: relative;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #b8956a, transparent);
+            border-radius: 2px;
+        }
+        
+        .header h1 {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 4.2rem;
+            color: #4a3320;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.06);
+            letter-spacing: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .header h1 i {
+            font-size: 2.8rem;
+            color: #b8956a;
+            margin: 0 10px;
+            opacity: 0.6;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #7a6248;
+            letter-spacing: 4px;
+            font-weight: 300;
+        }
+        
+        .header .badge {
+            display: inline-block;
+            margin-top: 12px;
+            background: rgba(184, 149, 106, 0.15);
+            padding: 6px 24px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: #7a6248;
+            border: 1px solid rgba(184, 149, 106, 0.2);
+        }
+        
+        /* ===== 题目列表 ===== */
+        .problem-list {
+            background: rgba(255, 252, 245, 0.80);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 32px 36px 40px;
+            box-shadow: 0 20px 60px -20px rgba(60, 45, 30, 0.20),
+                        inset 0 1px 0 rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(184, 149, 106, 0.15);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .list-header .count {
+            font-size: 0.9rem;
+            color: #7a6248;
+            background: rgba(184, 149, 106, 0.08);
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+        
+        .list-header .count i {
+            margin-right: 6px;
+        }
+        
+        /* ===== 题目卡片 ===== */
+        .problem-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            margin: 8px 0;
+            background: rgba(255, 252, 245, 0.40);
+            border-radius: 16px;
+            border: 1px solid rgba(184, 149, 106, 0.08);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            cursor: pointer;
+            gap: 16px;
+        }
+        
+        .problem-item:hover {
+            background: rgba(255, 252, 245, 0.85);
+            border-color: rgba(184, 149, 106, 0.25);
+            transform: translateX(6px) scale(1.005);
+            box-shadow: 0 8px 24px -12px rgba(60, 45, 30, 0.15);
+        }
+        
+        .problem-item:active {
+            transform: scale(0.98);
+        }
+        
+        .problem-number {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #b8956a, #a07d56);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: 'Ma Shan Zheng', cursive;
+            box-shadow: 0 4px 12px rgba(184, 149, 106, 0.25);
+        }
+        
+        .problem-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .problem-content .title {
+            font-size: 1.08rem;
+            font-weight: 600;
+            color: #3d2b1a;
+            line-height: 1.6;
+            transition: color 0.2s;
+        }
+        
+        .problem-item:hover .problem-content .title {
+            color: #8c5a2e;
+        }
+        
+        .problem-content .meta {
+            font-size: 0.75rem;
+            color: #a0856a;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .problem-content .meta i {
+            font-size: 0.7rem;
+            opacity: 0.6;
+        }
+        
+        .problem-arrow {
+            flex-shrink: 0;
+            color: #b8956a;
+            opacity: 0.3;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .problem-item:hover .problem-arrow {
+            opacity: 0.8;
+            transform: translateX(4px);
+        }
+        
+        /* ===== 底部 ===== */
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(184, 149, 106, 0.15);
+            color: #8a7055;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        
+        .footer-note i {
+            margin: 0 6px;
+            opacity: 0.4;
+        }
+        
+        /* ===== 返回首页按钮 ===== */
+        .home-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(255, 252, 245, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 8px 32px -12px rgba(60, 45, 30, 0.25);
+            border-radius: 50px;
+            padding: 14px 26px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #4a3320;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .home-fab i {
+            font-size: 1.1rem;
+            color: #b8956a;
+        }
+        
+        .home-fab:hover {
+            background: rgba(255, 252, 245, 0.98);
+            box-shadow: 0 12px 40px -12px rgba(60, 45, 30, 0.35);
+            transform: translateY(-3px) scale(1.02);
+        }
+        
+        .home-fab:active {
+            transform: scale(0.96);
+        }
+        
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            body { padding: 16px 12px; }
+            
+            .header h1 {
+                font-size: 2.8rem;
+                letter-spacing: 6px;
+            }
+            .header h1 i {
+                font-size: 2rem;
+            }
+            .header .subtitle {
+                font-size: 1rem;
+            }
+            
+            .problem-list {
+                padding: 20px 16px 28px;
+                border-radius: 20px;
+            }
+            
+            .problem-item {
+                padding: 13px 14px;
+                gap: 12px;
+            }
+            
+            .problem-number {
+                width: 34px;
+                height: 34px;
+                font-size: 0.75rem;
+            }
+            
+            .problem-content .title {
+                font-size: 0.95rem;
+            }
+            
+            .home-fab {
+                bottom: 18px;
+                right: 18px;
+                padding: 12px 18px;
+                font-size: 0.85rem;
+                gap: 8px;
+            }
+            .home-fab i {
+                font-size: 0.95rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2.2rem;
+                letter-spacing: 4px;
+            }
+            .header h1 i {
+                font-size: 1.6rem;
+            }
+            .header .subtitle {
+                font-size: 0.85rem;
+            }
+            
+            .problem-list {
+                padding: 14px 10px 20px;
+                border-radius: 16px;
+            }
+            
+            .problem-item {
+                padding: 10px 10px;
+                gap: 10px;
+                border-radius: 12px;
+            }
+            
+            .problem-number {
+                width: 28px;
+                height: 28px;
+                font-size: 0.65rem;
+            }
+            
+            .problem-content .title {
+                font-size: 0.85rem;
+            }
+            .problem-content .meta {
+                font-size: 0.65rem;
+            }
+            
+            .home-fab {
+                bottom: 14px;
+                right: 14px;
+                padding: 10px 14px;
+                font-size: 0.75rem;
+                gap: 6px;
+                border-radius: 40px;
+            }
+            .home-fab i {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ===== 头部 ===== -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-pen-fancy"></i>
+                读者服务
+                <i class="fas fa-pen-fancy"></i>
+            </h1>
+            <p class="subtitle">数学之美 · 简单才是美</p>
+            <span class="badge"><i class="fas fa-arrow-up"></i> 最新优先</span>
+        </div>
+        
+        <!-- ===== 题目列表 ===== -->
+        <div class="problem-list">
+            <div class="list-header">
+                <span class="count"><i class="fas fa-book-open"></i> </span>
+                <span class="count"><i class="fas fa-clock"></i> </span>
+            </div>
+            
+            <!-- ★★★ 在这里修改您的题目 ★★★ -->
+            <div class="problem-item" data-pdf="prob-1.pdf">
+                <span class="problem-number">1</span>
+                <div class="problem-content">
+                    <div class="title">高中数学竞赛电子书柜1——（国外英文版 36本）</div>
+                    <div class="meta"><i class="fas fa-calendar-alt"></i> 2026-08-13</div>
+                </div>
+                <span class="problem-arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+            
+            <div class="problem-item" data-pdf="prob-2.pdf">
+                <span class="problem-number">2</span>
+                <div class="problem-content">
+                    <div class="title">高中数学竞赛电子书柜2——（国外中文版53册）</div>
+                    <div class="meta"><i class="fas fa-calendar-alt"></i> 2026-08-12</div>
+                </div>
+                <span class="problem-arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+            
+            <div class="problem-item" data-pdf="prob-3.pdf">
+                <span class="problem-number">3</span>
+                <div class="problem-content">
+                    <div class="title">高中数学竞赛电子书柜3——（国内中文版 34册）</div>
+                    <div class="meta"><i class="fas fa-calendar-alt"></i> 2026-08-11</div>
+                </div>
+                <span class="problem-arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+            
+            <div class="problem-item" data-pdf="prob-4.pdf">
+                <span class="problem-number">4</span>
+                <div class="problem-content">
+                    <div class="title">大学数学电子书屋1——代数、分析、方程、拓扑与流形（英文版，66册）</div>
+                    <div class="meta"><i class="fas fa-calendar-alt"></i> 2026-08-10</div>
+                </div>
+                <span class="problem-arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+            
+            <div class="problem-item" data-pdf="prob-5.pdf">
+                <span class="problem-number">5</span>
+                <div class="problem-content">
+                    <div class="title">大学数学电子书屋2——几何类（英文版，43本）</div>
+                    <div class="meta"><i class="fas fa-calendar-alt"></i> 2026-08-09</div>
+                </div>
+                <span class="problem-arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+            
+            <div class="problem-item" data-pdf="prob-6.pdf">
+                <span class="problem-number">6</span>
+                <div class="problem-content">
+                    <div class="title">大学数学电子书屋3——概率统计、离散数学、数论（英文版，32册）</div>
+                    <div class="meta"><i class="fas fa-calendar-alt"></i> 2026-08-08</div>
+                </div>
+                <span class="problem-arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+            
+            <div class="problem-item" data-pdf="prob-7.pdf">
+                <span class="problem-number">7</span>
+                <div class="problem-content">
+                    <div class="title">大学数学电子书屋4（中文版，37册）</div>
+                    <div class="meta"><i class="fas fa-calendar-alt"></i> 2026-08-07</div>
+                </div>
+                <span class="problem-arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+            
+            <div class="problem-item" data-pdf="prob-8.pdf">
+                <span class="problem-number">8</span>
+                <div class="problem-content">
+                    <div class="title">日本高中高考数理化电子书柜（75本）</div>
+                    <div class="meta"><i class="fas fa-calendar-alt"></i> 2026-08-06</div>
+                </div>
+                <span class="problem-arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+            
+            <div class="problem-item" data-pdf="prob-9.pdf">
+                <span class="problem-number">9</span>
+                <div class="problem-content">
+                    <div class="title">数学词典类电子书柜（14册）</div>
+                    <div class="meta"><i class="fas fa-calendar-alt"></i> 2026-08-05</div>
+                </div>
+                <span class="problem-arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+           
+           
+        </div>
+        
+        <p class="footer-note">
+            <i class="fas fa-brain"></i> 数学有思想、有灵魂 · 享受数学之美吧
+            <i class="fas fa-heart" style="color: #c0392b; opacity: 0.5;"></i>
+            所有资料仅供学习参考
+        </p>
+    </div>
+    
+    <!-- ===== 返回首页按钮 ===== -->
+    <a href="../index.html" class="home-fab">
+        <i class="fas fa-home"></i> 返回首页
+    </a>
+
+    <script>
+        (function() {
+            // ============================================================
+            // ★★★ 点击题目打开PDF（在新窗口/标签页）★★★
+            // 使用和您旧网页一样的方式：直接打开PDF链接
+            // 但增加了"禁止下载"的保护措施
+            // ============================================================
+            
+            // 获取所有题目卡片
+            const items = document.querySelectorAll('.problem-item');
+            
+            items.forEach((item, index) => {
+                // 从 data-pdf 属性读取PDF文件名
+                const pdfFile = item.getAttribute('data-pdf');
+                
+                item.addEventListener('click', function(e) {
+                    // 打开PDF（和您旧网页一样的方式）
+                    // 使用 window.open 在新窗口/标签页打开
+                    const newWindow = window.open(pdfFile, '_blank');
+                    
+                    // 尝试禁用新窗口的右键菜单（部分浏览器可能不支持）
+                    if (newWindow) {
+                        try {
+                            // 等待页面加载后注入样式禁用右键
+                            newWindow.onload = function() {
+                                try {
+                                    // 禁用右键菜单
+                                    newWindow.document.addEventListener('contextmenu', function(ev) {
+                                        ev.preventDefault();
+                                        return false;
+                                    });
+                                    // 禁用Ctrl+S等快捷键
+                                    newWindow.document.addEventListener('keydown', function(ev) {
+                                        if (ev.ctrlKey && (ev.key === 's' || ev.key === 'S' || 
+                                            ev.key === 'p' || ev.key === 'P')) {
+                                            ev.preventDefault();
+                                            return false;
+                                        }
+                                    });
+                                    // 添加CSS禁用选择
+                                    const style = newWindow.document.createElement('style');
+                                    style.textContent = `
+                                        * { user-select: none !important; -webkit-user-select: none !important; }
+                                        body { user-select: none !important; }
+                                    `;
+                                    newWindow.document.head.appendChild(style);
+                                } catch(err) {
+                                    // 跨域限制，忽略
+                                }
+                            };
+                        } catch(err) {
+                            // 忽略跨域错误
+                        }
+                    }
+                });
+                
+                // 添加键盘 Enter 支持
+                item.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+                
+                // 设置 tabindex 使其可聚焦
+                item.setAttribute('tabindex', '0');
+                item.setAttribute('role', 'button');
+            });
+            
+            // ===== 全局禁用下载快捷键（在主页面上） =====
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && (e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // ===== 禁用页面右键菜单 =====
+            document.addEventListener('contextmenu', function(e) {
+                // 允许在输入框等元素上使用右键
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    return;
+                }
+                e.preventDefault();
+                return false;
+            });
+            
+            console.log('✅ 怎样解题 · 臻题集 加载完成');
+            console.log('📚 共 ' + items.length + ' 道题目');
+        })();
+    </script>
+</body>
+</html>
